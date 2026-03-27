@@ -1,0 +1,41 @@
+HOW TO RUN CAMPUSGIG PERFECTLY
+
+Follow these steps to set up and run the project on your local machine:
+
+STEP 1: OPEN TERMINAL & NAVIGATE
+Open your terminal and make sure you are in the project root directory (/home/zerotwo/Documents/nextgen).
+
+STEP 2: ACTIVATE VIRTUAL ENVIRONMENT
+We have already created a virtual environment named 'venv'. Activate it:
+- Command Linux: source venv/bin/activate
+
+- Command Windows: Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+- Command Windows: python -m venv venv  & .\venv\Scripts\Activate.ps1
+
+STEP 3: INSTALL DEPENDENCIES (If not already installed)
+If you move this project to a new system, run:
+- Command: pip install django pillow django-cors-headers
+
+STEP 4: DATABASE SETUP
+The database (db.sqlite3) is already provided, but if you need to reset it:
+1. Remove db.sqlite3
+2. Command: python manage.py migrate
+3. Command: python seed_data.py (This seeds the service categories like Web Dev, Design, etc.)
+
+STEP 5: CREATE AN ADMIN ACCOUNT (Optional but Recommended)
+To access the Django Admin panel:
+- Command: python manage.py createsuperuser
+- Follow the prompts to set a username and password.
+
+STEP 6: RUN THE DEVELOPMENT SERVER
+- Command: python manage.py runserver
+
+STEP 7: ACCESS THE PLATFORM
+- URL: http://127.0.0.1:8000
+- Admin Panel: http://127.0.0.1:8000/admin
+
+TIPS FOR A PERFECT EXPERIENCE:
+- Ensure your browser supports backdrop-filter CSS for the glassmorphism effect (Modern Chrome, Edge, Safari, or Firefox).
+- Log in or Register as a Freelancer to see the "Post a Gig" button.
+- Check the 'media/' folder to see where uploaded images are saved.

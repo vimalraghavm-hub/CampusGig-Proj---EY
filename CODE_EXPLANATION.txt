@@ -1,0 +1,39 @@
+CAMPUSGIG: CODE EXPLANATION (Updated March 2026)
+
+This project is a premium, high-performance freelancing platform for university students, featuring a glassmorphic design system and an advanced AI assistant.
+
+1. TECHNOLOGIES & MODULES USED:
+   - Python 3.12+ & Django 5.x: Core backend infrastructure.
+   - MySQL 8.0: High-performance relational database (running in Docker: assistant-db).
+   - Web Speech API: Native browser-based voice recognition and synthesis for the AI assistant.
+   - Pillow & mysqlclient: Libraries for image processing and MySQL connectivity.
+   - FontAwesome: Integrated for modern, professional icons.
+   - Google Fonts (Inter & Outfit): Sleek, readable typography for a premium feel.
+
+2. FOLDER STRUCTURE & COMPONENTS:
+   - campusgig/: Main project settings and core routing.
+   - core/: Handles advanced user authentication (Sellers vs Buyers).
+   - platform_app/: The heart of the marketplace (Gigs, Categories, Orders, Reviews).
+   - static/:
+     - css/design_system.css: Unified glassmorphic design system with topography patterns.
+     - js/assistant.js: The 'Perfect Assistant' logic (Dual Mode: Chat & Voice).
+     - js/main.js: UX enhancements and UI interactivity.
+   - templates/: Modernized Django templates matching the Gigs4U-styled overhaul.
+   - seed_data.py: A comprehensive data seeding script for mock platform activity.
+
+3. ADVANCED FEATURES:
+   - AI Campus Assistant: Built with a specialized knowledge base and 'Quick Assist' suggestion system. Supports both text and voice interactions with a navbar mode toggle.
+   - MySQL Infrastructure: Migrated from SQLite to support enterprise-grade scalability and performance.
+   - Gigs4U Design Style: A complete homepage redesign featuring a split-layout hero, social proof sections, and professional multi-column footer.
+   - Mock Datasets: Realistic seeding of 30+ gigs, 50+ reviews, and 10+ active users for immediate platform 'life'.
+
+4. KEY LOGIC FLOWS:
+   - Discovery: Filter by Category -> View Gig Details -> Read Mock Reviews.
+   - Transaction: Add to Cart -> Checkout -> Secure Order Page.
+   - Interaction: Real-time Messaging (Order Context) -> CampusBot Assistance.
+   - Growth: Register -> Post Services -> Manage Sales in Glassmorphic Dashboard.
+
+5. TEST CREDENTIALS:
+   - Admin Login: admin / 12345678
+   - Standard User: rahul / 12345678
+   - All seeded users use '12345678' as their password.

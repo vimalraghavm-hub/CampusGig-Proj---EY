@@ -1,0 +1,69 @@
+# Complete Setup Guide (For New Windows Computer)
+
+Follow these steps to set up CampusGig from scratch on a new Windows machine.
+
+## Prerequisites
+1. **Install Python**:
+   - Download and install Python 3.10+ from [python.org](https://www.python.org/).
+   - **IMPORTANT**: During installation, check the box that says **"Add Python to PATH"**.
+
+## Installation Steps (One-Time Setup)
+
+1. **Open PowerShell as Administrator**:
+   - Search for "PowerShell" in the Start menu, right-click, and select "Run as Administrator".
+   - Run this command to allow script execution:
+     ```powershell
+     Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+     ```
+
+2. **Navigate to Project Folder**:
+   - Use `cd` to go to the directory where you saved this project:
+     ```powershell
+     cd "C:\Path\To\campusgig-main"
+     ```
+
+3. **Create a Virtual Environment**:
+   - This keeps the project isolated from other apps:
+     ```powershell
+     python -m venv venv
+     ```
+
+4. **Activate the Environment**:
+   ```powershell
+   .\venv\Scripts\activate
+   ```
+
+5. **Install Dependencies**:
+   - This will install everything listed in `requirements.txt`:
+     ```powershell
+     pip install -r requirements.txt
+     ```
+
+6. **Prepare the Database**:
+   - Run migrations and seed data:
+     ```powershell
+     python manage.py migrate
+     python seed_data.py
+     ```
+
+## How to Run (Every Time)
+
+1. **Activate Environment**:
+   ```powershell
+   .\venv\Scripts\activate
+   ```
+
+2. **Start Server**:
+   ```powershell
+   python manage.py runserver
+   ```
+
+3. **Access in Browser**:
+   - Home: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+   - Login: [http://127.0.0.1:8000/accounts/login/](http://127.0.0.1:8000/accounts/login/)
+   - Register: [http://127.0.0.1:8000/accounts/register/](http://127.0.0.1:8000/accounts/register/)
+
+## Troubleshooting
+- **Command not found**: Ensure Python is added to PATH.
+- **Permission Error**: Ensure you ran the `Set-ExecutionPolicy` command in Step 1.
+- **Port 8000 in use**: Run `python manage.py runserver 8001` instead.
