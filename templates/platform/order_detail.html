@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}Order #{{ order.id }} | CampusGig{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 4rem; margin-bottom: 6rem;">
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 4rem;">
+        <!-- Left: Order Details & Chat -->
+        <main class="animate-fade">
+            <div class="glass" style="padding: 3rem; border-radius: var(--radius-lg); border-color: var(--glass-border); margin-bottom: 3rem; background: rgba(255,255,255,0.02);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3rem;">
+                    <div>
+                        <span style="text-transform: uppercase; font-size: 0.85rem; font-weight: 700; letter-spacing: 1.5px; color: var(--accent); display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-hashtag"></i> Order #{{ order.id }}
+                        </span>
+                        <h1 style="font-size: 2.5rem; margin-top: 0.75rem; font-family: 'Outfit', sans-serif;">{{ order.gig.title }}</h1>
+                    </div>
+                    <div class="status-badge {{ order.status|lower }}" style="padding: 10px 20px; font-size: 0.9rem; border-radius: 12px;">
+                        {{ order.get_status_display }}
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; padding: 2rem; background: rgba(255,255,255,0.03); border-radius: 16px; border: 1px solid var(--border); margin-bottom: 3.5rem;">
+                    <div style="text-align: center; border-right: 1px solid var(--border);">
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">Buyer</p>
+                        <p style="font-weight: 700; font-size: 1.1rem; color: var(--text);">{{ order.client.username }}</p>
+                    </div>
+                    <div style="text-align: center; border-right: 1px solid var(--border);">
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">Freelancer</p>
+                        <p style="font-weight: 700; font-size: 1.1rem; color: var(--text);">{{ order.gig.user.username }}</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">Amount</p>
+                        <p style="font-weight: 700; font-size: 1.1rem; color: var(--accent);">${{ order.gig.price }}</p>
+                    </div>
+                </div>
+
+                <h3 style="font-size: 1.5rem; margin-bottom: 2rem; font-family: 'Outfit', sans-serif; display: flex; align-items: center; gap: 12px;">
+                    <i class="fas fa-comments" style="color: var(--accent);"></i> Project Discussion
+                </h3>
+                
+                <div id="messages" style="height: 450px; overflow-y: auto; margin-bottom: 2rem; padding: 2rem; border-radius: 16px; background: rgba(0,0,0,0.15); display: flex; flex-direction: column; gap: 1.5rem; border: 1px solid var(--glass-border);">
+                    {% for msg in chat_messages %}
+                    <div style="max-width: 75%; padding: 1rem 1.25rem; border-radius: 16px; {% if msg.sender == user %}align-self: flex-end; background: var(--accent); color: white; box-shadow: 0 5px 15px var(--accent-glow);{% else %}align-self: flex-start; background: var(--glass); border: 1px solid var(--glass-border); color: var(--text);{% endif %}">
+                        <div style="display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 0.5rem; opacity: 0.8;">
+                            <strong style="font-size: 0.8rem;">{{ msg.sender.username }}</strong>
+                            <span style="font-size: 0.75rem;">{{ msg.timestamp|timesince }} ago</span>
+                        </div>
+                        <p style="line-height: 1.5; font-size: 1rem;">{{ msg.content }}</p>
+                    </div>
+                    {% empty %}
+                    <div style="text-align: center; margin-top: 100px; color: var(--text-muted);">
+                        <div style="width: 60px; height: 60px; background: var(--glass); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; opacity: 0.5;">
+                            <i class="fas fa-comment-slash fa-lg"></i>
+                        </div>
+                        <p>No messages yet. Send a message to start communicating!</p>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <form method="POST" action="{% url 'send_message' order.id %}" style="display: flex; gap: 12px;">
+                    {% csrf_token %}
+                    <input type="text" name="content" placeholder="Type your message here..." required
+                        style="flex: 1; background: var(--glass); border: 1px solid var(--border); color: white; padding: 16px 20px; border-radius: 12px; outline: none; font-size: 1rem; transition: all 0.3s ease;">
+                    <button type="submit" class="btn btn-primary" style="padding: 0 28px; font-weight: 700;">Send <i class="fas fa-paper-plane" style="margin-left: 8px; font-size: 0.9rem;"></i></button>
+                </form>
+            </div>
+        </main>
+
+        <!-- Right: Actions -->
+        <aside class="animate-fade" style="animation-delay: 0.1s;">
+            <div class="glass" style="padding: 2.5rem; border-radius: var(--radius-lg); position: sticky; top: 120px; border-color: var(--glass-border); border-top: 4px solid var(--accent);">
+                <h3 style="margin-bottom: 2rem; font-family: 'Outfit', sans-serif; font-size: 1.3rem;">Order Management</h3>
+
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    {% if user == order.gig.user %}
+                        {% if order.status == 'pending' %}
+                        <a href="{% url 'update_order_status' order.pk 'in_progress' %}" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 15px;">Accept Project</a>
+                        {% elif order.status == 'in_progress' %}
+                        <a href="{% url 'update_order_status' order.pk 'completed' %}" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 15px; background: #10b981; border-color: #10b981;">Complete & Deliver</a>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if user == order.client and order.status == 'pending' %}
+                    <div class="glass" style="padding: 1.25rem; border-radius: 12px; margin-bottom: 1rem; border-color: var(--accent); background: rgba(99, 102, 241, 0.05);">
+                        <p style="font-size: 0.9rem; color: var(--text); line-height: 1.6; text-align: center;">Waiting for <strong style="color: var(--accent);">{{ order.gig.user.username }}</strong> to accept your order request.</p>
+                    </div>
+                    {% endif %}
+
+                    {% if order.status != 'completed' and order.status != 'cancelled' %}
+                    <a href="{% url 'update_order_status' order.pk 'cancelled' %}" class="btn btn-outline"
+                        style="width: 100%; justify-content: center; color: #fca5a5; border-color: #ef4444; padding: 15px;">Cancel Order</a>
+                    {% endif %}
+                </div>
+                
+                <hr style="border: none; border-top: 1px solid var(--border); margin: 2rem 0;">
+                
+                <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">
+                    <p style="margin-bottom: 10px;"><i class="fas fa-info-circle" style="color: var(--accent); margin-right: 8px;"></i> Keep all communications within CampusGig to ensure platform protection.</p>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<style>
+    .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .status-badge.pending { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .status-badge.in_progress { background: rgba(99, 102, 241, 0.1); color: var(--accent); border: 1px solid rgba(99, 102, 241, 0.3); }
+    .status-badge.completed { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .status-badge.cancelled { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+    
+    .animate-fade { animation: fadeIn 0.8s ease forwards; opacity: 0; }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+{% endblock %}

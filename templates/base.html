@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CampusGig | Hire Student Freelancers{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/design_system.css' %}?v=1.0.2">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <nav class="glass">
+        <a href="/" class="logo">CampusGig</a>
+        <div class="nav-links">
+            <a href="{% url 'gig_list' %}">Browse Gigs</a>
+            {% if user.is_authenticated %}
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'cart' %}" style="margin: 0 10px;"><i class="fas fa-shopping-cart"></i></a>
+            {% endif %}
+            
+            <!-- Assistant Toggle in Navbar -->
+            <button id="assistant-nav-toggle" title="Switch Assistant Mode" style="background: none; border: none; color: var(--accent); cursor: pointer; font-size: 1.2rem; margin: 0 15px; transition: transform 0.3s ease;">
+                <i class="fas fa-comment-dots" id="nav-toggle-icon"></i>
+            </button>
+
+            {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}" class="btn btn-outline">Logout</a>
+            {% else %}
+            <a href="{% url 'login' %}">Sign In</a>
+            <a href="{% url 'register' %}" class="btn btn-primary">Join</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main>
+        {% if messages %}
+        <div class="container" style="margin-bottom: 2rem;">
+            {% for message in messages %}
+            <div class="alert {{ message.tags }} glass"
+                style="padding: 1rem; border-radius: var(--radius); border-left: 4px solid var(--accent);">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <a href="/" class="logo" style="font-size: 1.8rem; margin-bottom: 1.5rem; display: block;">CampusGig</a>
+                    <p style="color: var(--text-muted); line-height: 1.6;">
+                        The leading freelance marketplace specifically for university students. 
+                        Bridging the gap between talent and opportunity right on your campus.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Find GIGS</h4>
+                    <ul>
+                        <li><a href="{% url 'gig_list' %}">Browse All Gigs</a></li>
+                        <li><a href="{% url 'register' %}">Graphic Design</a></li>
+                        <li><a href="{% url 'register' %}">Web Development</a></li>
+                        <li><a href="{% url 'register' %}">Content Writing</a></li>
+                        <li><a href="{% url 'register' %}">App Development</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>For Recruiters</h4>
+                    <ul>
+                        <li><a href="{% url 'register' %}">Join as Recruiter</a></li>
+                        <li><a href="{% url 'login' %}">Sign In</a></li>
+                        <li><a href="{% url 'register' %}">Hire Student Talent</a></li>
+                        <li><a href="{% url 'register' %}">Business Solutions</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="{% url 'index' %}">Home</a></li>
+                        <li><a href="{% url 'index' %}#browse">Popular Services</a></li>
+                        <li><a href="{% url 'register' %}">Get Started</a></li>
+                        <li><a href="{% url 'index' %}">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div style="padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; color: var(--text-muted); font-size: 0.85rem;">
+                <p>&copy; 2026 CampusGig. All Rights Reserved. Built for students, by students.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AI Assistant -->
+    <div id="assistant-container">
+        <!-- Floating Trigger Button (Matches mode) -->
+        <button class="assistant-btn" id="assistant-trigger">
+            <i class="fas fa-comments" id="trigger-icon"></i>
+        </button>
+
+        <!-- Voice Mode Overlay (Transcript) -->
+        <div id="voice-overlay" class="glass animate-fade" style="display: none; position: fixed; bottom: 100px; right: 30px; padding: 1.5rem; border-radius: 16px; max-width: 300px; border: 1px solid var(--accent); z-index: 1000;">
+            <div style="font-size: 0.8rem; color: var(--accent); margin-bottom: 0.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Voice Mode</div>
+            <div id="voice-transcript" style="font-size: 1.1rem; color: white; min-height: 1.5rem;">Listening...</div>
+            <div id="voice-response" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); font-size: 0.9rem;"></div>
+        </div>
+
+        <!-- Chat Mode Window -->
+        <div class="assistant-window glass" id="assistant-window" style="display: none;">
+            <div class="assistant-header">
+                <span style="font-weight: 600;"><i class="fas fa-comments"></i> CampusBot</span>
+                <div style="display: flex; gap: 0.8rem; align-items: center;">
+                    <i class="fas fa-circle-notch fa-spin" id="assistant-loading" style="display: none; font-size: 0.8rem; opacity: 0.7;"></i>
+                    <button id="assistant-close" class="btn" style="padding: 0.2rem 0.5rem; background: rgba(255,255,255,0.1); border: none; color: white;"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+            <div class="assistant-messages" id="assistant-messages">
+                <!-- Messages injected by JS -->
+            </div>
+            
+            <!-- Quick Assist Suggestions -->
+            <div id="assistant-suggestions" style="padding: 0 1rem 0.5rem 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                <!-- Suggestions injected by JS -->
+            </div>
+
+            <div class="assistant-input">
+                <input type="text" id="assistant-input-field" placeholder="Ask me something...">
+                <button id="assistant-send" class="btn btn-primary" style="padding: 0.5rem;"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Assistant URLs -->
+    <script>
+        const CAMPUSGIG_URLS = {
+            home: "{% url 'index' %}",
+            gigs: "{% url 'gig_list' %}",
+            dashboard: "{% url 'dashboard' %}",
+            login: "{% url 'login' %}",
+            register: "{% url 'register' %}",
+            logout: "{% url 'logout' %}",
+            cart: "{% url 'cart' %}"
+        };
+    </script>
+    <script src="{% static 'js/assistant.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

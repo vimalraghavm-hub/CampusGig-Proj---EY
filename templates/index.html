@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-bg"></div>
+    <div class="container">
+        <div class="hero-content-wrapper">
+            <div class="hero-text" style="z-index: 2;">
+                <h1 style="font-size: 4rem; margin-bottom: 2rem; line-height: 1.1; font-weight: 800;">
+                    Hire the best <span style="background: linear-gradient(to right, var(--accent), var(--purple)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Student</span> Talent <br>for your next project.
+                </h1>
+                <p style="font-size: 1.3rem; margin-bottom: 3.5rem; color: var(--text-muted); line-height: 1.6; max-width: 600px;">
+                    CampusGig connects ambitious university students with businesses looking for high-quality, specialized freelance work. Start building your future today.
+                </p>
+                <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap; margin-bottom: 4rem;">
+                    <a href="{% url 'register' %}" class="btn btn-primary" style="padding: 18px 45px; font-size: 1.1rem; border-radius: 50px;">Get Started Now</a>
+                    <a href="#browse" class="btn btn-outline" style="padding: 18px 45px; font-size: 1.1rem; border-radius: 50px;">Browse Services</a>
+                </div>
+
+                <!-- Inline Stats -->
+                <div style="display: flex; gap: 40px;">
+                    <div>
+                        <h4 style="font-size: 1.8rem; margin-bottom: 5px; color: var(--accent);">15K+</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Students</p>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 1.8rem; margin-bottom: 5px; color: var(--purple);">5K+</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Projects</p>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 1.8rem; margin-bottom: 5px; color: var(--accent);">2.5K+</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Clients</p>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image-container">
+                <img src="{% static 'img/hero.png' %}" alt="Student Freelancer working on campus">
+                <div style="position: absolute; bottom: 30px; left: 30px; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); padding: 15px 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);">
+                    <p style="color: white; font-weight: 600; margin: 0; font-size: 0.9rem;">Verified Student Creators</p>
+                    <p style="color: var(--accent); font-size: 0.8rem; margin: 0;">Joining from 100+ campuses</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Trusted By Section -->
+<section class="trusted-bar" style="margin-top: -2rem; position: relative; z-index: 3;">
+    <div class="container">
+        <p style="color: var(--text-muted); margin-bottom: 2.5rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem;">Companies that trust our students</p>
+        <div class="logo-flex">
+            <div class="logo-item" style="letter-spacing: 3px;">TECHFLOW</div>
+            <div class="logo-item" style="letter-spacing: 3px;">CAMPUSPRO</div>
+            <div class="logo-item" style="letter-spacing: 3px;">STUDENTLY</div>
+            <div class="logo-item" style="letter-spacing: 3px;">GIGMASTERS</div>
+            <div class="logo-item" style="letter-spacing: 3px;">EDUPULSE</div>
+            <div class="logo-item" style="letter-spacing: 3px;">UNIWORKS</div>
+        </div>
+    </div>
+</section>
+
+<!-- Popular Services -->
+<section id="browse" class="container" style="padding: 10rem 0;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4rem;">
+        <div>
+            <h2 style="margin-bottom: 1rem; font-size: 3rem; font-weight: 800;">Popular <span class="text-gradient">Services</span></h2>
+            <p style="color: var(--text-muted); font-size: 1.1rem;">Most in-demand skills on campus today.</p>
+        </div>
+        <a href="{% url 'gig_list' %}" class="btn-link" style="color: var(--accent); font-weight: 700; font-size: 1.1rem;">View all Categories <i class="fas fa-arrow-right" style="margin-left: 10px;"></i></a>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2.5rem;">
+        {% for category in categories %}
+        <a href="{% url 'gig_list_by_category' category.slug %}" class="card glass"
+            style="padding: 4rem 2rem; border-radius: var(--radius-lg); text-align: center; border: 1px solid var(--glass-border); transition: all 0.3s ease;">
+            <div style="width: 80px; height: 80px; background: rgba(99, 102, 241, 0.1); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; color: var(--accent);">
+                <i class="{{ category.icon }} fa-3x"></i>
+            </div>
+            <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">{{ category.name }}</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">Explore top-rated {{ category.name }} gigs from verified students.</p>
+        </a>
+        {% empty %}
+        <!-- Mock Categories for Professional Look if DB Empty -->
+        <div class="card glass" style="padding: 4rem 2rem; border-radius: var(--radius-lg); text-align: center; border: 1px solid var(--glass-border);">
+            <div style="width: 80px; height: 80px; background: rgba(99, 102, 241, 0.1); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; color: var(--accent);">
+                <i class="fas fa-code fa-3x"></i>
+            </div>
+            <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Web Development</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">Build your online presence with campus experts.</p>
+        </div>
+        <div class="card glass" style="padding: 4rem 2rem; border-radius: var(--radius-lg); text-align: center; border: 1px solid var(--glass-border);">
+            <div style="width: 80px; height: 80px; background: rgba(168, 85, 247, 0.1); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; color: var(--purple);">
+                <i class="fas fa-paint-brush fa-3x"></i>
+            </div>
+            <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Graphic Design</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">Premium branding and creative visual assets.</p>
+        </div>
+        <div class="card glass" style="padding: 4rem 2rem; border-radius: var(--radius-lg); text-align: center; border: 1px solid var(--glass-border);">
+            <div style="width: 80px; height: 80px; background: rgba(99, 102, 241, 0.1); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; color: var(--accent);">
+                <i class="fas fa-pen-nib fa-3x"></i>
+            </div>
+            <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Content Writing</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">SEO-optimized content and academic assistance.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- How it Works -->
+<section style="background: rgba(255,255,255,0.01); padding: 10rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div class="container">
+        <div style="text-align: center; margin-bottom: 6rem;">
+            <h2 style="font-size: 3.5rem; margin-bottom: 1.5rem; font-weight: 800;">How <span class="text-gradient">CampusGig Works</span></h2>
+            <p style="color: var(--text-muted); font-size: 1.2rem; max-width: 700px; margin: 0 auto;">Simplifying the freelance experience for students and recruiters.</p>
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-card-numbered">
+                <span class="feature-number">01</span>
+                <div class="feature-icon-circle">
+                    <i class="fas fa-search fa-2x"></i>
+                </div>
+                <h3 style="margin-bottom: 1.5rem; font-size: 1.5rem;">Find Talent</h3>
+                <p style="color: var(--text-muted); line-height: 1.6;">Browse specialized gigs or search for specific student experts by their campus and major.</p>
+            </div>
+            <div class="feature-card-numbered">
+                <span class="feature-number">02</span>
+                <div class="feature-icon-circle">
+                    <i class="fas fa-comments fa-2x"></i>
+                </div>
+                <h3 style="margin-bottom: 1.5rem; font-size: 1.5rem;">Communicate</h3>
+                <p style="color: var(--text-muted); line-height: 1.6;">Chat directly with your chosen student to finalize project scope, deadlines, and requirements.</p>
+            </div>
+            <div class="feature-card-numbered">
+                <span class="feature-number">03</span>
+                <div class="feature-icon-circle">
+                    <i class="fas fa-check-double fa-2x"></i>
+                </div>
+                <h3 style="margin-bottom: 1.5rem; font-size: 1.5rem;">Get Results</h3>
+                <p style="color: var(--text-muted); line-height: 1.6;">Receive your high-quality deliverables through our platform with integrated review and feedback loops.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="container" style="padding: 10rem 0;">
+    <div style="text-align: center; margin-bottom: 6rem;">
+        <h2 style="font-size: 3rem; font-weight: 800;">Happy <span class="text-gradient">Clients!</span></h2>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 3rem;">
+        <div class="card glass" style="padding: 3rem; border-radius: var(--radius-lg);">
+            <div style="display: flex; gap: 15px; margin-bottom: 2rem;">
+                 <div style="width: 60px; height: 60px; background: #eee; border-radius: 50%; overflow: hidden;">
+                    <img src="https://ui-avatars.com/api/?name=Alex+Johnson&background=6366f1&color=fff" alt="User">
+                 </div>
+                 <div>
+                    <h4 style="margin-bottom: 5px;">Alex Johnson</h4>
+                    <p style="color: var(--accent); font-size: 0.85rem; font-weight: 600;">CEO, TechFlow</p>
+                 </div>
+            </div>
+            <p style="color: var(--text-muted); font-style: italic; line-height: 1.8;">
+                "CampusGig revolutionized how we find interns. The quality of work from students is exceptional and the platform is incredibly easy to use."
+            </p>
+        </div>
+        <div class="card glass" style="padding: 3rem; border-radius: var(--radius-lg);">
+            <div style="display: flex; gap: 15px; margin-bottom: 2rem;">
+                 <div style="width: 60px; height: 60px; background: #eee; border-radius: 50%; overflow: hidden;">
+                    <img src="https://ui-avatars.com/api/?name=Sarah+Miller&background=a855f7&color=fff" alt="User">
+                 </div>
+                 <div>
+                    <h4 style="margin-bottom: 5px;">Sarah Miller</h4>
+                    <p style="color: var(--purple); font-size: 0.85rem; font-weight: 600;">Marketing Lead, EduPulse</p>
+                 </div>
+            </div>
+            <p style="color: var(--text-muted); font-style: italic; line-height: 1.8;">
+                "I was skeptical about hiring students at first, but the candidates we found on CampusGig were more skilled and professional than many agencies we've worked with."
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="container" style="padding: 10rem 0; text-align: center;">
+    <div class="glass" style="padding: 8rem 2rem; border-radius: var(--radius-lg); position: relative; overflow: hidden;">
+         <div style="position: absolute; top: -100px; right: -100px; width: 400px; height: 400px; background: var(--accent); filter: blur(200px); opacity: 0.15;"></div>
+         <h2 style="font-size: 3.5rem; margin-bottom: 2rem; font-weight: 800;">Ready to hire your first <span class="text-gradient">Student Creator?</span></h2>
+         <p style="color: var(--text-muted); font-size: 1.3rem; max-width: 700px; margin: 0 auto 4rem;">Join the growing community of students and businesses building the future together on campus.</p>
+         <div style="display: flex; gap: 20px; justify-content: center;">
+            <a href="{% url 'register' %}" class="btn btn-primary" style="padding: 20px 60px; border-radius: 50px; font-size: 1.2rem; font-weight: 700;">Join CampusGig Today</a>
+         </div>
+    </div>
+</section>
+{% endblock %}

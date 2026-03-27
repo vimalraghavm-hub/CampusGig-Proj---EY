@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ gig.title }} | CampusGig{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 4rem; margin-bottom: 6rem;">
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 4rem;">
+        <!-- Left Column: Gig Info -->
+        <article class="animate-fade">
+            <nav style="padding: 0; margin-bottom: 2rem;">
+                <p style="font-size: 0.95rem; color: var(--text-muted); display: flex; align-items: center; gap: 10px;">
+                    <a href="{% url 'gig_list' %}" style="color: var(--accent); text-decoration: none; font-weight: 600;">Marketplace</a> 
+                    <i class="fas fa-chevron-right fa-xs"></i>
+                    <a href="{% url 'gig_list_by_category' gig.category.slug %}" style="color: var(--text-muted); text-decoration: none;">{{ gig.category.name }}</a>
+                </p>
+            </nav>
+
+            <h1 style="font-size: 3rem; margin-bottom: 2.5rem; font-family: 'Outfit', sans-serif; line-height: 1.2;">{{ gig.title }}</h1>
+
+            <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 3.5rem; padding: 1.5rem; background: rgba(255,255,255,0.03); border-radius: 16px; border: 1px solid var(--border); width: fit-content;">
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--accent), var(--accent-glow)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; color: white;">
+                    {{ gig.user.username|first|upper }}
+                </div>
+                <div>
+                    <h4 style="margin: 0; font-size: 1.1rem; color: var(--text);">{{ gig.user.username }}</h4>
+                    <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted);">Premium Student Seller</p>
+                </div>
+            </div>
+
+            <div class="glass" style="width: 100%; border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 4rem; border-color: var(--glass-border); box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
+                {% if gig.image %}
+                <img src="{{ gig.image.url }}" alt="{{ gig.title }}" style="width: 100%; height: auto; display: block; transition: transform 0.5s ease;">
+                {% else %}
+                <div style="width: 100%; height: 450px; background: var(--glass); display: flex; align-items: center; justify-content: center; color: var(--border);">
+                    <i class="fas fa-image fa-6x"></i>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="glass" style="padding: 3rem; border-radius: var(--radius-lg); border-color: var(--glass-border); background: rgba(255,255,255,0.01);">
+                <h3 style="font-size: 1.75rem; margin-bottom: 2rem; font-family: 'Outfit', sans-serif;">Project Overview</h3>
+                <div style="line-height: 1.8; color: var(--text-muted); white-space: pre-wrap; font-size: 1.1rem;">{{ gig.description }}</div>
+            </div>
+        </article>
+
+        <!-- Right Column: Order Card -->
+        <aside class="animate-fade" style="animation-delay: 0.1s;">
+            <div class="glass" style="position: sticky; top: 120px; padding: 3rem; border-radius: var(--radius-lg); border: 2px solid var(--accent); box-shadow: 0 15px 35px var(--accent-glow);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2 style="margin: 0; font-size: 2.5rem; font-family: 'Outfit', sans-serif;">${{ gig.price }}</h2>
+                    <span style="color: var(--text-muted); font-size: 0.95rem; background: rgba(255,255,255,0.05); padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border);">
+                        <i class="fas fa-clock" style="color: var(--accent);"></i> {{ gig.delivery_time }} Days
+                    </span>
+                </div>
+
+                <p style="font-size: 1.05rem; margin-bottom: 2.5rem; color: var(--text-muted); line-height: 1.6;">Premium student service delivered with excellence and verified campus skills.</p>
+
+                <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                    <form action="{% url 'create_order' gig.pk %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 18px; font-size: 1.1rem; font-weight: 700;">CONTINUE (${{ gig.price }})</button>
+                    </form>
+
+                    <form action="{% url 'add_to_cart' gig.pk %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline" style="width: 100%; justify-content: center; padding: 18px; font-size: 1.1rem; font-weight: 600; color: var(--text);">ADD TO CART</button>
+                    </form>
+
+                    <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+                        <a href="mailto:{{ gig.user.email }}" style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-decoration: none; transition: color 0.3s ease;">
+                            <i class="fas fa-envelope" style="margin-right: 8px;"></i> Contact Freelancer
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}

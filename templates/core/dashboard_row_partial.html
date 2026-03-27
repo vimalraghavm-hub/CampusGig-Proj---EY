@@ -1,0 +1,20 @@
+<tr class="table-row">
+    <td style="padding: 1.25rem 1.5rem; font-weight: 600;">#{{ order.id }}</td>
+    <td style="padding: 1.25rem 1.5rem;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 32px; height: 32px; background: var(--glass); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--accent);">
+                <i class="fas fa-tag fa-sm"></i>
+            </div>
+            <span style="font-weight: 500;">{{ order.gig.title|truncatechars:40 }}</span>
+        </div>
+    </td>
+    <td style="padding: 1.25rem 1.5rem;">
+        <span class="status-badge {{ order.status|lower }}">
+            {{ order.get_status_display }}
+        </span>
+    </td>
+    <td style="padding: 1.25rem 1.5rem; color: var(--text-muted); font-size: 0.9rem;">{{ order.created_at|date:"M d, Y" }}</td>
+    <td style="padding: 1.25rem 1.5rem; text-align: center;">
+        <a href="{% url 'order_detail' order.pk %}" class="btn btn-outline" style="padding: 6px 14px; font-size: 0.8rem; border-color: var(--accent); color: var(--accent);">Details</a>
+    </td>
+</tr>
